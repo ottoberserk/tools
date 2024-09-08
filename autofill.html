@@ -52,34 +52,24 @@
                     emailInput.value = `${sanitized}${randomDigits}@gmail.com`;
                 }
 
-                // Generate country if missing, using any available city, state, or postal code
+                // Generate country if missing
                 const countryInput = form.querySelector('[name="country"]');
-                if (countryInput && !countryInput.value) {
-                    const city = data['address-level2'] ? data['address-level2'] : '';
-                    let state = data['address-level1'] ? data['address-level1'].split('-')[0].trim() : ''; // Sanitize state
-                    const postalCode = data['postal-code'] ? data['postal-code'] : '';
+                if (countryInput && !countryInput.value && data['address-level2'] && data['address-level1']) {
+                    const city = data['address-level2'];
+                    const state = data['address-level1'];
+                    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)},${encodeURIComponent(state)}&format=json&addressdetails=1`;
 
-                    // Create the query with available data (city, state, postal code)
-                    let query = '';
-                    if (city) query += `${city},`;
-                    if (state) query += `${state},`;
-                    if (postalCode) query += `${postalCode}`;
-
-                    if (query) {
-                        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1`;
-
-                        try {
-                            const response = await fetch(url);
-                            const result = await response.json();
-                            if (result && result.length > 0) {
-                                const country = result[0].address.country;
-                                if (country) {
-                                    countryInput.value = country;
-                                }
+                    try {
+                        const response = await fetch(url);
+                        const result = await response.json();
+                        if (result && result.length > 0) {
+                            const country = result[0].address.country;
+                            if (country) {
+                                countryInput.value = country;
                             }
-                        } catch (error) {
-                            console.error('Error fetching country data:', error);
                         }
+                    } catch (error) {
+                        console.error('Error fetching country data:', error);
                     }
                 }
             });
