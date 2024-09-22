@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <textarea id="urlInput" rows="10" cols="50" placeholder="Enter PayPal URLs, one per line..."></textarea><br>
-    <button onclick="extractTokens()">Extract Tokens</button>
+    <textarea id="urlInput" rows="10" cols="50" placeholder="Enter text here..."></textarea><br>
     <textarea id="tokenOutput" rows="10" cols="50" readonly></textarea>
+    <br>
+        <button onclick="extractTokens()">Submit</button>
 
     <script>
         function extractTokens() {
