@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Formatter</title>
 </head>
 <body>
     <textarea id="emailInput" placeholder="Enter text here..." rows="10" cols="50" autofocus></textarea>
@@ -12,8 +13,17 @@
     <script>
         function formatEmails() {
             const input = document.getElementById('emailInput').value;
-            const emails = input.split(/[\s,]+/).filter(email => email);
-            const formatted = emails.join(';\n'); // Join with semicolon and newline
+            // Remove existing semicolons or whitespace at the end of each email
+            const emails = input.split(/[\s,]+/).map(email => email.replace(/;$/, '')).filter(email => email);
+            
+            // Group emails in chunks of 5
+            let emailChunks = [];
+            for (let i = 0; i < emails.length; i += 5) {
+                emailChunks.push(emails.slice(i, i + 5).join('; ')); // Join 5 emails with semicolons
+            }
+
+            // Join each chunk with a new line
+            const formatted = emailChunks.join('\n');
             document.getElementById('emailInput').value = formatted; // Display result in the textarea
         }
     </script>
