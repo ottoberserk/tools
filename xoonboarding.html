@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <textarea id="urlInput" rows="10" cols="50" placeholder="Enter PayPal URLs, one per line..."></textarea><br>
+    <button onclick="extractTokens()">Extract Tokens</button>
+    <textarea id="tokenOutput" rows="10" cols="50" readonly></textarea>
+
+    <script>
+        function extractTokens() {
+            const urls = document.getElementById('urlInput').value.split('\n');
+            const prefix = 'https://www.paypal.com/webapps/xoonboarding?ul=landing&flow=1-P&token=';
+            const tokens = urls.map(url => {
+                const match = url.match(/token=([^&]+)/);
+                return match ? prefix + match[1] : '';
+            }).filter(Boolean);
+            document.getElementById('tokenOutput').value = tokens.join('\n\n'); // Extra newline for spacing
+        }
+    </script>
+</body>
+</html>
