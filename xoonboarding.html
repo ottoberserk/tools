@@ -6,9 +6,7 @@
 </head>
 <body>
     <textarea id="urlInput" rows="10" cols="50" placeholder="Enter text here..."></textarea><br>
-    <textarea id="tokenOutput" rows="10" cols="50" readonly></textarea>
-    <br>
-        <button onclick="extractTokens()">Submit</button>
+    <button onclick="extractTokens()">Submit</button>
 
     <script>
         function extractTokens() {
@@ -18,7 +16,9 @@
                 const match = url.match(/token=([^&]+)/);
                 return match ? prefix + match[1] : '';
             }).filter(Boolean);
-            document.getElementById('tokenOutput').value = tokens.join('\n\n'); // Extra newline for spacing
+            
+            // Display result back in the same textarea
+            document.getElementById('urlInput').value = tokens.join('\n\n'); // Extra newline for spacing
         }
     </script>
 </body>
