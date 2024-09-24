@@ -9,7 +9,7 @@
     <input type="text" id="email" required><br><br>
 
     <label for="itemName">Item Name:</label><br>
-    <input type="text" id="itemName" value="Book" required><br><br>
+    <input type="text" id="itemName" value="Pro" required><br><br>
 
     <label for="amount">Amount:</label><br>
     <input type="number" id="amount" value="8.5" required><br><br>
@@ -29,7 +29,7 @@
             const currency = document.getElementById('currency').value; // No trimming
 
             // Generate the PayPal link
-            const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization`;
+            const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization&sra=0&button_subtype=services&no_shipping=1`;
 
             // Log the generated link to the console
             console.log("Generated PayPal Invoice Link:", paypalLink);
