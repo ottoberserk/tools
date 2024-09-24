@@ -6,20 +6,20 @@
 </head>
 <body>
     <label for="email">PayPal Email:</label><br>
-    <input type="text" id="email" placeholder="Enter your PayPal email" required><br><br>
+    <input type="text" id="email" required><br><br>
 
     <label for="itemName">Item Name:</label><br>
-    <input type="text" id="itemName" value="Book" placeholder="Enter item name" required><br><br>
+    <input type="text" id="itemName" value="Book" required><br><br>
 
     <label for="amount">Amount:</label><br>
-    <input type="number" id="amount" value="8.5" placeholder="Enter amount" required><br><br>
+    <input type="number" id="amount" value="8.5" required><br><br>
 
     <label for="currency">Currency Code:</label><br>
-    <input type="text" id="currency" value="USD" placeholder="Enter currency code (e.g., USD)" required><br><br>
+    <input type="text" id="currency" value="USD" required><br><br>
 
     <button id="generate">Generate Invoice Link</button><br><br>
 
-    <textarea id="urlInput" rows="10" cols="50" placeholder="API response or PayPal URLs will appear here..." autofocus></textarea><br>
+    <textarea id="urlInput" rows="10" cols="50" autofocus></textarea><br>
 
     <script>
         document.getElementById('generate').addEventListener('click', async function() {
