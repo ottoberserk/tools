@@ -22,50 +22,50 @@
     <textarea id="urlInput" rows="10" cols="50" autofocus></textarea><br>
 
     <script>
-        document.getElementById('generate').addEventListener('click', async function() {
-            const email = document.getElementById('email').value.trim(); // Trim spaces from email only
-            const itemName = document.getElementById('itemName').value; // No trimming
-            const amount = document.getElementById('amount').value; // No trimming
-            const currency = document.getElementById('currency').value; // No trimming
+       document.getElementById('generate').addEventListener('click', async function() {
+    const email = document.getElementById('email').value.trim(); // Trim spaces from email only
+    const itemName = document.getElementById('itemName').value; // No trimming
+    const amount = document.getElementById('amount').value; // No trimming
+    const currency = document.getElementById('currency').value; // No trimming
 
-            // Generate the PayPal link
-            const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization&sra=0&button_subtype=services&no_shipping=1`;
+    // Generate the PayPal link
+    const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization&sra=0&button_subtype=services&no_shipping=1`;
 
-            // Log the generated link to the console
-            console.log("Generated PayPal Invoice Link:", paypalLink);
+    // Log the generated link to the console
+    console.log("Generated PayPal Invoice Link:", paypalLink);
 
-            // Fetch the final URL using the provided API
-            const apiUrl = `https://ovk.yhw.temporary.site/?url=${encodeURIComponent(paypalLink)}`;
+    // Fetch the final URL using the provided API, with the timestamp added at the end
+    const apiUrl = `https://ovk.yhw.temporary.site/?url=${encodeURIComponent(paypalLink)}&t=${new Date().getTime()}`;
 
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-
-                // Display the API response in the urlInput textarea
-                document.getElementById("urlInput").value = JSON.stringify(data, null, 2);
-
-                // Automatically extract tokens from the API response
-                extractTokens();
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-                document.getElementById("urlInput").value = "Error loading data";
-            }
-        });
-
-        function extractTokens() {
-            const urls = document.getElementById('urlInput').value.split('\n');
-            const prefix = 'https://www.paypal.com/webapps/xoonboarding?ul=landing&flow=1-P&token=';
-            const tokens = urls.map(url => {
-                const match = url.match(/token=([^&]+)/);
-                return match ? prefix + match[1] : '';
-            }).filter(Boolean);
-            
-            // Display result back in the same textarea
-            document.getElementById('urlInput').value = tokens.join('\n\n'); // Extra newline for spacing
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        const data = await response.json();
+
+        // Display the API response in the urlInput textarea
+        document.getElementById("urlInput").value = JSON.stringify(data, null, 2);
+
+        // Automatically extract tokens from the API response
+        extractTokens();
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        document.getElementById("urlInput").value = "Error loading data";
+    }
+});
+
+function extractTokens() {
+    const urls = document.getElementById('urlInput').value.split('\n');
+    const prefix = 'https://www.paypal.com/webapps/xoonboarding?ul=landing&flow=1-P&token=';
+    const tokens = urls.map(url => {
+        const match = url.match(/token=([^&]+)/);
+        return match ? prefix + match[1] : '';
+    }).filter(Boolean);
+    
+    // Display result back in the same textarea
+    document.getElementById('urlInput').value = tokens.join('\n\n'); // Extra newline for spacing
+}
     </script>
 </body>
 </html>
