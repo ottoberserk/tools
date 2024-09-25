@@ -35,7 +35,7 @@
             console.log("Generated PayPal Invoice Link:", paypalLink);
 
             // Fetch the final URL using the provided API
-            const apiUrl = `https://45c7bf25-ac52-4dab-b357-23c5206d07e1-00-2c26u0qcc5h37.worf.replit.dev/?url=${encodeURIComponent(paypalLink)}`;
+            const apiUrl = `https://ticuta.com/?url=${encodeURIComponent(paypalLink)}`;
 
             try {
                 const response = await fetch(apiUrl);
