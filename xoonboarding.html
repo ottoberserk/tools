@@ -29,7 +29,7 @@
     const currency = document.getElementById('currency').value; // No trimming
 
     // Generate the PayPal link
-    const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization&sra=0&button_subtype=services&no_shipping=1&threeDSecure=false&three_ds=false&threeDSecureRequest=false&threeDSecureAuthentication=false&threeDSecureChallengeIndicator=03&PAYMENTREQUEST_0_3DSECURE=0&&disable-captcha=1`;
+    const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization&sra=0&button_subtype=services&no_shipping=1&threeDSecure=false&three_ds=false&threeDSecureRequest=false&threeDSecureAuthentication=false&threeDSecureChallengeIndicator=03&PAYMENTREQUEST_0_3DSECURE=0&disable-captcha=1`;
 
     // Log the generated link to the console
     console.log("Generated PayPal Invoice Link:", paypalLink);
