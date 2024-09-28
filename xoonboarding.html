@@ -68,7 +68,7 @@
     urls.forEach(url => {
         const match = url.match(/token=([^&]+)/);
         if (match) {
-            tokensSet.add(prefix + match[1] + '#/checkout/guest&genericError?code=RETRY');
+            tokensSet.add(prefix + match[1]);
         }
     });
 
