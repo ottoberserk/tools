@@ -22,43 +22,57 @@
     <textarea id="urlInput" rows="10" cols="50" autofocus></textarea><br>
 
     <script>
-        document.getElementById('generate').addEventListener('click', async function() {
-            const email = document.getElementById('email').value.trim();
-            const itemName = document.getElementById('itemName').value;
-            const amount = document.getElementById('amount').value;
-            const currency = document.getElementById('currency').value;
+document.getElementById('generate').addEventListener('click', async function() {
+    const email = document.getElementById('email').value.trim();
+    const itemName = document.getElementById('itemName').value;
+    const amount = document.getElementById('amount').value;
+    const currency = document.getElementById('currency').value;
 
-            // Generate the PayPal link
-            const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization&sra=0&button_subtype=services&no_shipping=1&threeDSecure=false&three_ds=false&threeDSecureRequest=false&threeDSecureAuthentication=false&threeDSecureChallengeIndicator=03&PAYMENTREQUEST_0_3DSECURE=0&disable-captcha=1`;
+    // Get the current date and time in Casablanca timezone
+    const options = { timeZone: 'Africa/Casablanca', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true };
+    const dateTime = new Intl.DateTimeFormat('en-US', options).format(new Date());
+    const [date, time] = dateTime.split(', '); // Split date and time
+    const [month, day, year] = date.split('/'); // Split date into month, day, year
+    const formattedDate = `${year}/${month}/${day}`; // Format date as YYYY/MM/DD
+    const [hour, minute] = time.split(':');
+    const formattedHour = hour.trim();
+    const formattedMinute = minute.trim().slice(0, 2); // Ensure only two digits for minutes
+    const formattedTime = `${formattedHour}:${formattedMinute}`; // Use colon for time
 
-            // Log the generated link to the console
-            console.log("Generated PayPal Invoice Link:", paypalLink);
+    // Generate the PayPal link with return and cancel_return parameters
+    const returnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=completed`;
+    const cancelReturnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=failed`;
 
-            // Construct the API URL with additional parameters
-            const apiUrl = `https://api.redirect-checker.net/?url=${encodeURIComponent(paypalLink)}&timeout=5&maxhops=10&meta-refresh=1&format=json&more=1&t=${new Date().getTime()}`;
+    const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization&sra=0&button_subtype=services&no_shipping=1&threeDSecure=false&three_ds=false&threeDSecureRequest=false&threeDSecureAuthentication=false&threeDSecureChallengeIndicator=03&PAYMENTREQUEST_0_3DSECURE=0&disable-captcha=1&return=${encodeURIComponent(returnUrl)}&cancel_return=${encodeURIComponent(cancelReturnUrl)}`;
 
-            // Encode the entire API URL for the corsproxy
-            const corsApiUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
+    // Log the generated link to the console
+    console.log("Generated PayPal Invoice Link:", paypalLink);
 
-            try {
-                const response = await fetch(corsApiUrl);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
+    // Construct the API URL with additional parameters
+    const apiUrl = `https://api.redirect-checker.net/?url=${encodeURIComponent(paypalLink)}&timeout=5&maxhops=10&meta-refresh=1&format=json&more=1&t=${new Date().getTime()}`;
 
-                // Display the API response in the urlInput textarea
-                document.getElementById("urlInput").value = JSON.stringify(data, null, 2);
+    // Encode the entire API URL for the corsproxy
+    const corsApiUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
 
-                // Automatically extract tokens from the API response
-                extractTokens(data);
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-                document.getElementById("urlInput").value = "Error loading data";
-            }
-        });
+    try {
+        const response = await fetch(corsApiUrl);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
 
- function extractTokens(data) {
+        // Display the API response in the urlInput textarea
+        document.getElementById("urlInput").value = JSON.stringify(data, null, 2);
+
+        // Automatically extract tokens from the API response
+        extractTokens(data);
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        document.getElementById("urlInput").value = "Error loading data";
+    }
+});
+
+function extractTokens(data) {
     const urls = JSON.stringify(data, null, 2).split('\n');
     const prefix = 'https://www.paypal.com/webapps/xoonboarding?ul=landing&flow=1-P&token=';
     
@@ -78,6 +92,8 @@
     // Display result back in the same textarea
     document.getElementById('urlInput').value = uniqueTokens.join('\n\n'); // Extra newline for spacing
 }
+
+
 
     </script>
 </body>
