@@ -28,16 +28,19 @@ document.getElementById('generate').addEventListener('click', async function() {
     const amount = document.getElementById('amount').value;
     const currency = document.getElementById('currency').value;
 
-    // Get the current date and time in Casablanca timezone
-    const options = { timeZone: 'Africa/Casablanca', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true };
-    const dateTime = new Intl.DateTimeFormat('en-US', options).format(new Date());
-    const [date, time] = dateTime.split(', '); // Split date and time
-    const [month, day, year] = date.split('/'); // Split date into month, day, year
-    const formattedDate = `${year}/${month}/${day}`; // Format date as YYYY/MM/DD
-    const [hour, minute] = time.split(':');
-    const formattedHour = hour.trim();
-    const formattedMinute = minute.trim().slice(0, 2); // Ensure only two digits for minutes
-    const formattedTime = `${formattedHour}:${formattedMinute}`; // Use colon for time
+  // Get the current date and time in Casablanca timezone
+const options = { timeZone: 'Africa/Casablanca', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true };
+const dateTime = new Intl.DateTimeFormat('en-US', options).format(new Date());
+const [date, time] = dateTime.split(', '); // Split date and time
+const [month, day, year] = date.split('/'); // Split date into month, day, year
+const formattedDate = `${year}/${month}/${day}`; // Format date as YYYY/MM/DD
+const [hour, minute] = time.split(':');
+const formattedHour = hour.trim();
+const formattedMinute = minute.trim().slice(0, 2); // Ensure only two digits for minutes
+
+// Format time as HH:MMAM or HH:MMPM
+const formattedTime = `${formattedHour}:${formattedMinute}${formattedHour >= 12 ? 'PM' : 'AM'}`.toUpperCase(); // Use colon for time
+
 
     // Generate the PayPal link with return and cancel_return parameters
     const returnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=completed`;
