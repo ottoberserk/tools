@@ -49,7 +49,7 @@ const formattedTime = `${formattedHour}:${formattedMinute}${formattedHour >= 12 
     const returnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=completed`;
     const cancelReturnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=failed`;
 
-    const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization&sra=0&button_subtype=services&no_shipping=1&threeDSecure=false&three_ds=false&threeDSecureRequest=false&threeDSecureAuthentication=false&threeDSecureChallengeIndicator=03&PAYMENTREQUEST_0_3DSECURE=0&disable-captcha=1&return=${encodeURIComponent(returnUrl)}&cancel_return=${encodeURIComponent(cancelReturnUrl)}&invoice_number=${orderNumber}`;
+    const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization&sra=0&button_subtype=services&no_shipping=1&threeDSecure=false&three_ds=false&threeDSecureRequest=false&threeDSecureAuthentication=false&threeDSecureChallengeIndicator=03&PAYMENTREQUEST_0_3DSECURE=0&disable-captcha=1&return=${encodeURIComponent(returnUrl)}&cancel_return=${encodeURIComponent(cancelReturnUrl)}&invoice_number=${orderNumber}&item_number=${orderNumber}`;
 
     // Log the generated link to the console
     console.log("Generated PayPal Invoice Link:", paypalLink);
