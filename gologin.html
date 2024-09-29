@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Input</title>
+</head>
+<body>
+
+    <h1>Input Data</h1>
+    <textarea id="dataInput" placeholder="Enter your data here..."></textarea>
+    <p>Output:</p>
+    <textarea id="output" readonly></textarea>
+
+    <script>
+        const dataInput = document.getElementById('dataInput');
+        const output = document.getElementById('output');
+
+        dataInput.addEventListener('input', () => {
+            const lines = dataInput.value.split('\n');
+            const ccData = lines.find(line => line.startsWith('cc-name:')) || '';
+            const ccCsc = lines.find(line => line.startsWith('cc-csc:')) || '';
+            const ccExp = lines.find(line => line.startsWith('cc-exp:')) || '';
+
+            const ccName = ccData.replace('cc-name:', '').trim();
+            const ccCscValue = ccCsc.replace('cc-csc:', '').trim();
+            const ccExpValue = ccExp.replace('cc-exp:', '').trim();
+
+            output.value = `${ccCscValue} ${ccName} ${ccExpValue}`;
+        });
+    </script>
+
+</body>
+</html>
