@@ -15,10 +15,10 @@
             // Remove existing semicolons or whitespace at the end of each email
             const emails = input.split(/[\s,]+/).map(email => email.replace(/;$/, '')).filter(email => email);
             
-            // Group emails in chunks of 2
+            // Group emails in chunks of 3
             let emailChunks = [];
-            for (let i = 0; i < emails.length; i += 2) {
-                emailChunks.push(emails.slice(i, i + 2).join('; ')); // Join 2 emails with semicolons
+            for (let i = 0; i < emails.length; i += 3) {
+                emailChunks.push(emails.slice(i, i + 3).join('; ')); // Join 3 emails with semicolons
             }
 
             // Join each chunk with a new line
