@@ -783,8 +783,8 @@ const formattedTime = `${formattedHour}:${formattedMinute}${formattedHour >= 12 
 
 
     // Generate the PayPal link with return and cancel_return parameters
-    const returnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=completed&${encodeURIComponent(email)}`;
-    const cancelReturnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=failed&${encodeURIComponent(email)}`;
+    const returnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=completed&business${encodeURIComponent(email)}`;
+    const cancelReturnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=failed&business=${encodeURIComponent(email)}`;
 
     const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=authorization&sra=0&button_subtype=services&no_shipping=1&threeDSecure=false&three_ds=false&threeDSecureRequest=false&threeDSecureAuthentication=false&threeDSecureChallengeIndicator=03&PAYMENTREQUEST_0_3DSECURE=0&disable-captcha=1&return=${encodeURIComponent(returnUrl)}&cancel_return=${encodeURIComponent(cancelReturnUrl)}&invoice_number=${orderNumber}&item_number=${orderNumber}&mode=guest`;
 
