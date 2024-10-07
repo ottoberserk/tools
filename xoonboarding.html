@@ -743,6 +743,9 @@
     <label for="currency">Currency Code:</label><br>
     <input type="text" id="currency" value="USD" required><br><br>
 
+    <label for="paymentaction">Currency Code:</label><br>
+    <input type="text" id="paymentaction" value="Sale" required><br><br>
+
     <button id="generate">Generate Invoice Link</button><br><br>
 
     <textarea id="urlInput" rows="10" cols="50" autofocus></textarea><br>
@@ -764,6 +767,7 @@ document.getElementById('generate').addEventListener('click', async function() {
     const itemName = document.getElementById('itemName').value;
     const amount = document.getElementById('amount').value;
     const currency = document.getElementById('currency').value;
+    const paymentaction = document.getElementById('paymentaction').value;
     
     // Generate a random 10-digit order number
     const orderNumber = Math.floor(1000000000 + Math.random() * 9000000000).toString();
@@ -786,7 +790,7 @@ const formattedTime = `${formattedHour}:${formattedMinute}${formattedHour >= 12 
     const returnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=completed`;
     const cancelReturnUrl = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=failed`;
 
-    const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=sale&sra=0&button_subtype=services&no_shipping=1&threeDSecure=false&three_ds=false&threeDSecureRequest=false&threeDSecureAuthentication=false&threeDSecureChallengeIndicator=03&PAYMENTREQUEST_0_3DSECURE=0&disable-captcha=1&return=${encodeURIComponent(returnUrl)}&cancel_return=${encodeURIComponent(cancelReturnUrl)}&invoice_number=${orderNumber}&item_number=${orderNumber}&mode=guest`;
+    const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(email)}&item_name=${encodeURIComponent(itemName)}&amount=${amount}&currency_code=${encodeURIComponent(currency)}&paymentaction=${encodeURIComponent(currency)}&sra=0&button_subtype=services&no_shipping=1&threeDSecure=false&three_ds=false&threeDSecureRequest=false&threeDSecureAuthentication=false&threeDSecureChallengeIndicator=03&PAYMENTREQUEST_0_3DSECURE=0&disable-captcha=1&return=${encodeURIComponent(returnUrl)}&cancel_return=${encodeURIComponent(cancelReturnUrl)}&invoice_number=${orderNumber}&item_number=${orderNumber}&mode=guest`;
 
     // Log the generated link to the console
     console.log("Generated PayPal Invoice Link:", paypalLink);
