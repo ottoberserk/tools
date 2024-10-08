@@ -25,7 +25,7 @@
         // Function to get the entire URL parameter value
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
+            return urlParams.get(name); // Get the value of the parameter
         }
 
         // Get the 'url' parameter from the URL
@@ -33,7 +33,13 @@
 
         // Set the iframe source to the URL parameter
         if (url) {
-            document.getElementById('contentFrame').src = url;
+            // Check if the URL contains '=' and take everything after it
+            const urlParts = url.split('=');
+            if (urlParts.length > 1) {
+                document.getElementById('contentFrame').src = urlParts.slice(1).join('='); // Join back the parts after the first '='
+            } else {
+                document.getElementById('contentFrame').src = url; // If no '=' found, use the whole URL
+            }
         } else {
             document.getElementById('contentFrame').src = 'about:blank'; // Default to blank if no URL is provided
         }
