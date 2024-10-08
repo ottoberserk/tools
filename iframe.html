@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iframe Full Page</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="contentFrame" src=""></iframe>
+
+    <script>
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[$$]/, '\\[').replace(/[$$]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Get the 'url' parameter from the URL
+        var url = getUrlParameter('url');
+
+        // Set the iframe source to the URL parameter
+        if (url) {
+            document.getElementById('contentFrame').src = url;
+        } else {
+            document.getElementById('contentFrame').src = 'about:blank'; // Default to blank if no URL is provided
+        }
+    </script>
+</body>
+</html>
