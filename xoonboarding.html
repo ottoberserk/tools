@@ -27,45 +27,28 @@
             const orderNumber = generateRandomNumber();
             const itemNumber = generateRandomNumber();
             const productName = `Product-${generateRandomToken(8)}`;
+            const amount = document.getElementById('amount').value;
 
-            const options = {
-                timeZone: 'Africa/Casablanca',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            };
-            const dateTime = new Intl.DateTimeFormat('en-US', options).format(new Date());
-            const [date, time] = dateTime.split(', ');
-            const [month, day, year] = date.split('/');
-            const formattedDate = `${year}/${month}/${day}`;
-            const [hour, minute] = time.split(':');
-            const formattedHour = hour.trim();
-            const formattedMinute = minute.trim().slice(0, 2);
-
-            const formattedTime = `${formattedHour}:${formattedMinute}${formattedHour >= 12 ? 'PM' : 'AM'}`.toUpperCase();
+            const dateTime = new Date().toISOString().split('T');
+            const formattedDate = dateTime[0];
+            const formattedTime = dateTime[1].slice(0, 5); // HH:MM
 
             document.getElementById('orderNumber').value = orderNumber;
             document.getElementById('itemNumber').value = itemNumber;
             document.getElementById('itemName').value = productName;
-
-            const amount = document.getElementById('amount').value;
             document.getElementById('returnUrl').value = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=completed`;
             document.getElementById('cancelReturnUrl').value = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=failed`;
         }
 
         window.onload = function() {
             const email = getParameterByName('business');
-            const autoSubmitParam = getParameterByName('submit'); // Use any name you want
+            const autoSubmitParam = getParameterByName('submit');
 
             if (email) {
                 document.getElementById('email').value = email;
             }
-            document.getElementById('itemName').value = `Product-${generateRandomToken(8)}`;
+            setOrderAndItemNumbers(); // Call this function directly
 
-            // Automatically submit the form if the autoSubmitParam is present
             if (autoSubmitParam) {
                 document.forms[0].submit();
             }
@@ -76,7 +59,7 @@
 
 <h1>PayPal Payment</h1>
 
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" onsubmit="setOrderAndItemNumbers()">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
     <label for="email">Email:</label><br>
     <input type="text" id="email" name="business" required><br><br>
 
