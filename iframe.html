@@ -22,12 +22,10 @@
     <iframe id="contentFrame" src=""></iframe>
 
     <script>
-        // Function to get URL parameters
+        // Function to get the entire URL parameter value
         function getUrlParameter(name) {
-            name = name.replace(/[$$]/, '\\[').replace(/[$$]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
         }
 
         // Get the 'url' parameter from the URL
