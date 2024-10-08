@@ -43,7 +43,7 @@
             linkList.innerHTML = ''; // Clear previous links
 
             if (emailInput) {
-                const baseUrl = 'https://danielericgold.github.io/tools/xoonboarding?submit=true&business=';
+                const baseUrl = 'https://danielericgold.github.io/tools/xoon?submit=true&business=';
                 const emails = emailInput.split('\n'); // Split by new line
 
                 // Show email count
@@ -55,6 +55,7 @@
                         const link = document.createElement('a');
                         link.href = baseUrl + encodeURIComponent(email);
                         link.textContent = email; // Use email as link text
+                        link.target = '_blank'; // Open in new tab
 
                         // Add click event to highlight the last clicked link
                         link.addEventListener('click', function() {
