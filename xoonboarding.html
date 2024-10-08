@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PayPal Payment Form</title>
     <script>
+        function getParameterByName(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
         function generateRandomNumber() {
             return Math.floor(1000000000 + Math.random() * 9000000000).toString();
         }
@@ -21,9 +26,8 @@
         function setOrderAndItemNumbers() {
             const orderNumber = generateRandomNumber();
             const itemNumber = generateRandomNumber();
-            const productName = `Product-${generateRandomToken(8)}`; // Generate a random product name
+            const productName = `Product-${generateRandomToken(8)}`;
 
-            // Get the current date and time in Casablanca timezone
             const options = {
                 timeZone: 'Africa/Casablanca',
                 year: 'numeric',
@@ -34,31 +38,37 @@
                 hour12: true
             };
             const dateTime = new Intl.DateTimeFormat('en-US', options).format(new Date());
-            const [date, time] = dateTime.split(', '); // Split date and time
-            const [month, day, year] = date.split('/'); // Split date into month, day, year
-            const formattedDate = `${year}/${month}/${day}`; // Format date as YYYY/MM/DD
+            const [date, time] = dateTime.split(', ');
+            const [month, day, year] = date.split('/');
+            const formattedDate = `${year}/${month}/${day}`;
             const [hour, minute] = time.split(':');
             const formattedHour = hour.trim();
-            const formattedMinute = minute.trim().slice(0, 2); // Ensure only two digits for minutes
+            const formattedMinute = minute.trim().slice(0, 2);
 
-            // Format time as HH:MMAM or HH:MMPM
             const formattedTime = `${formattedHour}:${formattedMinute}${formattedHour >= 12 ? 'PM' : 'AM'}`.toUpperCase();
 
-            // Set the generated values
             document.getElementById('orderNumber').value = orderNumber;
             document.getElementById('itemNumber').value = itemNumber;
-            document.getElementById('itemName').value = productName; // Set random product name
+            document.getElementById('itemName').value = productName;
 
-            // Update the return and cancel return URLs
             const amount = document.getElementById('amount').value;
             document.getElementById('returnUrl').value = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=completed`;
             document.getElementById('cancelReturnUrl').value = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=failed`;
         }
 
-        // Set default values on page load
         window.onload = function() {
-            // Generate and set a random product name on page load
+            const email = getParameterByName('business');
+            const autoSubmitParam = getParameterByName('submit'); // Use any name you want
+
+            if (email) {
+                document.getElementById('email').value = email;
+            }
             document.getElementById('itemName').value = `Product-${generateRandomToken(8)}`;
+
+            // Automatically submit the form if the autoSubmitParam is present
+            if (autoSubmitParam) {
+                document.forms[0].submit();
+            }
         };
     </script>
 </head>
