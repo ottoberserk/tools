@@ -7,6 +7,30 @@
         document.addEventListener('DOMContentLoaded', () => {
             const textarea = document.getElementById('textarea');
             const form = document.getElementById('form');
+            const countryInput = form.querySelector('[name="country"]');
+            
+            const countryCache = {};
+
+            async function fetchCountry(city, state) {
+                const cacheKey = `${city}-${state}`;
+                if (countryCache[cacheKey]) {
+                    return countryCache[cacheKey]; // Return cached result
+                }
+
+                const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)},${encodeURIComponent(state)}&format=json&addressdetails=1`;
+                try {
+                    const response = await fetch(url);
+                    const result = await response.json();
+                    if (result && result.length > 0) {
+                        const country = result[0].address.country;
+                        countryCache[cacheKey] = country; // Cache the result
+                        return country;
+                    }
+                } catch (error) {
+                    console.error('Error fetching country data:', error);
+                }
+                return null; // Return null if no country found or error occurred
+            }
 
             textarea.addEventListener('paste', async (event) => {
                 // Prevent the default paste action
@@ -14,11 +38,8 @@
 
                 // Get the pasted data
                 const pastedData = (event.clipboardData || window.clipboardData).getData('text');
-
-                // Split the pasted data into lines
                 const lines = pastedData.split('\n');
 
-                // Parse the pasted data into key-value pairs
                 const data = {};
                 lines.forEach(line => {
                     const [key, value] = line.split(':').map(part => part.trim());
@@ -46,29 +67,21 @@
                 if (emailInput && !emailInput.value && data['cc-name']) {
                     const sanitized = data['cc-name']
                         .toLowerCase()
-                        .replace(/[^a-z0-9]/g, ''); // Remove non-alphanumeric characters
-                    const randomDigits = Math.floor(1000 + Math.random() * 9000); // Generate 4 random digits
+                        .replace(/[^a-z0-9]/g, '');
+                    const randomDigits = Math.floor(1000 + Math.random() * 9000);
                     emailInput.value = `${sanitized}${randomDigits}@gmail.com`;
                 }
 
                 // Generate country if missing
-                const countryInput = form.querySelector('[name="country"]');
-                if (countryInput && !countryInput.value && data['address-level2'] && data['address-level1']) {
-                    const city = data['address-level2'];
-                    const state = data['address-level1'];
-                    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)},${encodeURIComponent(state)}&format=json&addressdetails=1`;
-
-                    try {
-                        const response = await fetch(url);
-                        const result = await response.json();
-                        if (result && result.length > 0) {
-                            const country = result[0].address.country;
-                            if (country) {
-                                countryInput.value = country;
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Error fetching country data:', error);
+                const state = data['address-level1']?.trim();
+                const city = data['address-level2']?.trim();
+                if (countryInput && !countryInput.value && city && state) {
+                    const country = await fetchCountry(city, state);
+                    if (country) {
+                        countryInput.value = country;
+                    } else {
+                        // Prompt the user to enter the country manually
+                        alert("Could not determine the country. Please enter it manually.");
                     }
                 }
             });
@@ -76,7 +89,7 @@
             // Add keyboard shortcut for form submission
             document.addEventListener('keydown', function(event) {
                 if (event.ctrlKey && event.shiftKey && event.altKey && event.key === 'F12') {
-                    event.preventDefault(); // Prevent default behavior
+                    event.preventDefault();
                     form.submit();
                 }
             });
@@ -111,8 +124,8 @@
             <input type="tel" name="tel" autocomplete="tel" placeholder="tel" required><br><br>
             
             <input type="email" name="email" autocomplete="email" placeholder="email" required>
-            </fieldset><br>
-           
+        </fieldset><br>
+        
         <button type="submit">Submit</button>
     </form>
 </body>
