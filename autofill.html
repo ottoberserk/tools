@@ -77,12 +77,7 @@
                 const city = data['address-level2']?.trim();
                 if (countryInput && !countryInput.value && city && state) {
                     const country = await fetchCountry(city, state);
-                    if (country) {
-                        countryInput.value = country;
-                    } else {
-                        // Prompt the user to enter the country manually
-                        alert("Could not determine the country. Please enter it manually.");
-                    }
+                    countryInput.value = country || 'Morocco'; // Set default to Morocco if country is null
                 }
             });
 
