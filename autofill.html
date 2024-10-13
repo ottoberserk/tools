@@ -37,20 +37,20 @@
     </script>
 </head>
 <body>
-    <form id="form" action="" method="GET">
+    <form id="form" autocomplete="on">
         <textarea id="textarea" placeholder="Enter text..." oninput="extractData()"></textarea><br><br>
-        <input type="text" name="cc-name" placeholder="cc-name" required><br>
-        <input type="text" name="cc-number" placeholder="cc-number" required><br>
-        <input type="text" name="cc-exp" placeholder="cc-exp" required><br>
-        <input type="text" name="cc-csc" placeholder="cc-csc" required><br>
-        <input type="text" name="country" placeholder="country"><br>
-        <input type="text" name="name" placeholder="name" required><br>
-        <input type="text" name="street-address" placeholder="street-address" required><br>
-        <input type="text" name="address-level2" placeholder="address-level2" required><br>
-        <input type="text" name="address-level1" placeholder="address-level1" required><br>
-        <input type="text" name="postal-code" placeholder="postal-code" required><br>
-        <input type="tel" name="tel" placeholder="tel" required><br>
-        <input type="email" name="email" placeholder="email" required><br>
+        <input type="text" name="cc-name" placeholder="Cardholder Name" autocomplete="cc-name" required><br>
+        <input type="text" name="cc-number" placeholder="Credit Card Number" autocomplete="cc-number" required><br>
+        <input type="text" name="cc-exp" placeholder="Expiration Date (MM/YY)" autocomplete="cc-exp" required><br>
+        <input type="text" name="cc-csc" placeholder="CVV" autocomplete="cc-csc" required><br>
+        <input type="text" name="country" placeholder="Country" autocomplete="address-country" required><br>
+        <input type="text" name="name" placeholder="Full Name" autocomplete="name" required><br>
+        <input type="text" name="street-address" placeholder="Street Address" autocomplete="address-line1" required><br>
+        <input type="text" name="address-level2" placeholder="City" autocomplete="address-level2" required><br>
+        <input type="text" name="address-level1" placeholder="State/Province" autocomplete="address-level1" required><br>
+        <input type="text" name="postal-code" placeholder="Postal Code" autocomplete="postal-code" required><br>
+        <input type="tel" name="tel" placeholder="Phone Number" autocomplete="tel" required><br>
+        <input type="email" name="email" placeholder="Email" autocomplete="email" required><br>
         <button type="submit">Submit</button>
     </form>
 </body>
