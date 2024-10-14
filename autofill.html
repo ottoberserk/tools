@@ -9,67 +9,36 @@
             const form = document.getElementById('form');
 
             textarea.addEventListener('paste', async (event) => {
-                // Prevent the default paste action
                 event.preventDefault();
 
-                // Get the pasted data
-                const pastedData = (event.clipboardData || window.clipboardData).getData('text');
+                // Clear all input fields in the form
+                Array.from(form.elements).forEach(input => {
+                    if (input.tagName === 'INPUT') {
+                        input.value = '';
+                    }
+                });
 
-                // Split the pasted data into lines
+                const pastedData = (event.clipboardData || window.clipboardData).getData('text');
                 const lines = pastedData.split('\n');
 
-                // Parse the pasted data into key-value pairs
                 const data = {};
+                let ccNumber = '';
+
                 lines.forEach(line => {
                     const [key, value] = line.split(':').map(part => part.trim());
                     if (key && value) {
                         data[key] = value;
+                        if (key === 'cc-number') {
+                            ccNumber = value.replace(/\s/g, '').slice(0, 6); // Get the first 6 digits
+                        }
                     }
                 });
 
-                // Populate the form fields with the parsed data
-                for (const [key, value] of Object.entries(data)) {
-                    const input = form.querySelector(`[name="${key}"]`);
-                    if (input) {
-                        input.value = value;
-                    }
-                }
-
-                // Automatically fill the address 'name' field if missing
-                const addressNameInput = form.querySelector('[name="name"]');
-                if (addressNameInput && !addressNameInput.value && data['cc-name']) {
-                    addressNameInput.value = data['cc-name'];
-                }
-
-                // Duplicate the cc-name if it's a single word
-                const ccNameInput = form.querySelector('[name="cc-name"]');
-                if (ccNameInput && ccNameInput.value.split(' ').length === 1) {
-                    ccNameInput.value = `${ccNameInput.value} ${ccNameInput.value}`;
-                }
-
-                // Duplicate the name if it's a single word
-                if (addressNameInput && addressNameInput.value.split(' ').length === 1) {
-                    addressNameInput.value = `${addressNameInput.value} ${addressNameInput.value}`;
-                }
-
-                // Generate email if missing
-                const emailInput = form.querySelector('[name="email"]');
-                if (emailInput && !emailInput.value && data['cc-name']) {
-                    const sanitized = data['cc-name']
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]/g, ''); // Remove non-alphanumeric characters
-                    const randomDigits = Math.floor(1000 + Math.random() * 9000); // Generate 4 random digits
-                    emailInput.value = `${sanitized}${randomDigits}@gmail.com`;
-                }
-
-                // Generate country based on the card number
+                // Fetch country based on card number if not already filled
                 const countryInput = form.querySelector('[name="country"]');
-                const ccNumberInput = form.querySelector('[name="cc-number"]');
-
-                if (ccNumberInput && countryInput && !countryInput.value) {
-                    const ccNumber = ccNumberInput.value.replace(/\s/g, '').slice(0, 6); // Get the first 6 digits for the BIN
+                if (ccNumber) {
                     const proxyUrl = 'https://corsproxy.io/?';
-                    const apiUrl = `https://bins.ws/search?bins=${ccNumber}`;
+                    const apiUrl = `https://bincheck.io/details/${ccNumber}`;
 
                     try {
                         const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
@@ -77,14 +46,13 @@
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(responseData, 'text/html');
 
-                        // Find the country in the last row of the table
-                        const rows = doc.querySelectorAll('table.dataframe tbody tr');
+                        const rows = doc.querySelectorAll('table.w-full tbody tr');
                         let country = 'Country not found.';
 
                         rows.forEach(row => {
                             const cells = row.querySelectorAll('td');
-                            if (cells.length > 5) { // Ensure there are enough cells
-                                country = cells[5].textContent.trim(); // Extract country value from the last column
+                            if (cells[0] && cells[0].textContent.includes('ISO Country Name')) {
+                                country = cells[1].textContent.trim();
                             }
                         });
 
@@ -95,12 +63,46 @@
                         console.error('Error fetching country data:', error);
                     }
                 }
+
+                // Populate form fields with parsed data
+                for (const [key, value] of Object.entries(data)) {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input) {
+                        input.value = value;
+                    }
+                }
+
+                // Automatically fill 'name' field if missing
+                const addressNameInput = form.querySelector('[name="name"]');
+                if (addressNameInput && !addressNameInput.value && data['cc-name']) {
+                    addressNameInput.value = data['cc-name'];
+                }
+
+                // Duplicate single-word cc-name and name
+                const ccNameInput = form.querySelector('[name="cc-name"]');
+                if (ccNameInput && ccNameInput.value.split(' ').length === 1) {
+                    ccNameInput.value = `${ccNameInput.value} ${ccNameInput.value}`;
+                }
+
+                if (addressNameInput && addressNameInput.value.split(' ').length === 1) {
+                    addressNameInput.value = `${addressNameInput.value} ${addressNameInput.value}`;
+                }
+
+                // Generate email if missing
+                const emailInput = form.querySelector('[name="email"]');
+                if (emailInput && !emailInput.value && data['cc-name']) {
+                    const sanitized = data['cc-name']
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]/g, '');
+                    const randomDigits = Math.floor(1000 + Math.random() * 9000);
+                    emailInput.value = `${sanitized}${randomDigits}@gmail.com`;
+                }
             });
 
             // Add keyboard shortcut for form submission
             document.addEventListener('keydown', function(event) {
                 if (event.ctrlKey && event.shiftKey && event.altKey && event.key === 'F12') {
-                    event.preventDefault(); // Prevent default behavior
+                    event.preventDefault();
                     form.submit();
                 }
             });
