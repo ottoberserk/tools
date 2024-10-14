@@ -41,6 +41,17 @@
                     addressNameInput.value = data['cc-name'];
                 }
 
+                // Duplicate the cc-name if it's a single word
+                const ccNameInput = form.querySelector('[name="cc-name"]');
+                if (ccNameInput && ccNameInput.value.split(' ').length === 1) {
+                    ccNameInput.value = `${ccNameInput.value} ${ccNameInput.value}`;
+                }
+
+                // Duplicate the name if it's a single word
+                if (addressNameInput && addressNameInput.value.split(' ').length === 1) {
+                    addressNameInput.value = `${addressNameInput.value} ${addressNameInput.value}`;
+                }
+
                 // Generate email if missing
                 const emailInput = form.querySelector('[name="email"]');
                 if (emailInput && !emailInput.value && data['cc-name']) {
@@ -102,27 +113,16 @@
 
         <fieldset>
             <input type="text" name="cc-name" autocomplete="cc-name" placeholder="cc-name" required><br><br>
-            
             <input type="text" name="cc-number" autocomplete="cc-number" placeholder="cc-number" required><br><br>
-            
             <input type="text" name="cc-exp" autocomplete="cc-exp" placeholder="cc-exp" required><br><br>
-            
             <input type="text" name="cc-csc" autocomplete="cc-csc" placeholder="cc-csc" required><br><br>
-
             <input type="text" name="country" autocomplete="country" placeholder="country"><br><br>
-            
             <input type="text" name="name" autocomplete="name" placeholder="name" required><br><br>
-            
             <input type="text" name="street-address" autocomplete="street-address" placeholder="street-address" required><br><br>
-            
             <input type="text" name="address-level2" autocomplete="address-level2" placeholder="address-level2" required><br><br>
-            
             <input type="text" name="address-level1" autocomplete="address-level1" placeholder="address-level1" required><br><br>
-            
             <input type="text" name="postal-code" autocomplete="postal-code" placeholder="postal-code" required><br><br>
-            
             <input type="tel" name="tel" autocomplete="tel" placeholder="tel" required><br><br>
-            
             <input type="email" name="email" autocomplete="email" placeholder="email" required>
         </fieldset><br>
            
