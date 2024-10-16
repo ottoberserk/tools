@@ -4,109 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const textarea = document.getElementById('textarea');
-            const form = document.getElementById('form');
+    document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.getElementById('textarea');
+    const form = document.getElementById('form');
 
-            textarea.addEventListener('paste', async (event) => {
-                event.preventDefault();
+    textarea.addEventListener('paste', async (event) => {
+        event.preventDefault();
 
-                // Clear all input fields in the form
-                Array.from(form.elements).forEach(input => {
-                    if (input.tagName === 'INPUT') {
-                        input.value = '';
-                    }
-                });
-
-                const pastedData = (event.clipboardData || window.clipboardData).getData('text');
-                const lines = pastedData.split('\n');
-
-                const data = {};
-                let ccNumber = '';
-
-                lines.forEach(line => {
-                    const [key, value] = line.split(':').map(part => part.trim());
-                    if (key && value) {
-                        data[key] = value;
-                        if (key === 'cc-number') {
-                            ccNumber = value.replace(/\s/g, '').slice(0, 6); // Get the first 6 digits
-                        }
-                    }
-                });
-
-                // Fetch country based on card number if not already filled
-                const countryInput = form.querySelector('[name="country"]');
-                if (ccNumber) {
-                    const proxyUrl = 'https://corsproxy.io/?';
-                    const apiUrl = `https://bincheck.io/details/${ccNumber}`;
-
-                    try {
-                        const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
-                        const responseData = await response.text();
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(responseData, 'text/html');
-
-                        const rows = doc.querySelectorAll('table.w-full tbody tr');
-                        let country = 'Country not found.';
-
-                        rows.forEach(row => {
-                            const cells = row.querySelectorAll('td');
-                            if (cells[0] && cells[0].textContent.includes('ISO Country Name')) {
-                                country = cells[1].textContent.trim();
-                            }
-                        });
-
-                        if (country) {
-                            countryInput.value = country;
-                        }
-                    } catch (error) {
-                        console.error('Error fetching country data:', error);
-                    }
-                }
-
-                // Populate form fields with parsed data
-                for (const [key, value] of Object.entries(data)) {
-                    const input = form.querySelector(`[name="${key}"]`);
-                    if (input) {
-                        input.value = value;
-                    }
-                }
-
-                // Automatically fill 'name' field if missing
-                const addressNameInput = form.querySelector('[name="name"]');
-                if (addressNameInput && !addressNameInput.value && data['cc-name']) {
-                    addressNameInput.value = data['cc-name'];
-                }
-
-                // Duplicate single-word cc-name and name
-                const ccNameInput = form.querySelector('[name="cc-name"]');
-                if (ccNameInput && ccNameInput.value.split(' ').length === 1) {
-                    ccNameInput.value = `${ccNameInput.value} ${ccNameInput.value}`;
-                }
-
-                if (addressNameInput && addressNameInput.value.split(' ').length === 1) {
-                    addressNameInput.value = `${addressNameInput.value} ${addressNameInput.value}`;
-                }
-
-                // Generate email if missing
-                const emailInput = form.querySelector('[name="email"]');
-                if (emailInput && !emailInput.value && data['cc-name']) {
-                    const sanitized = data['cc-name']
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]/g, '');
-                    const randomDigits = Math.floor(1000 + Math.random() * 9000);
-                    emailInput.value = `${sanitized}${randomDigits}@gmail.com`;
-                }
-            });
-
-            // Add keyboard shortcut for form submission
-            document.addEventListener('keydown', function(event) {
-                if (event.ctrlKey && event.shiftKey && event.altKey && event.key === 'F12') {
-                    event.preventDefault();
-                    form.submit();
-                }
-            });
+        // Clear all input fields in the form
+        Array.from(form.elements).forEach(input => {
+            if (input.tagName === 'INPUT') {
+                input.value = '';
+            }
         });
+
+        const pastedData = (event.clipboardData || window.clipboardData).getData('text');
+        const lines = pastedData.split('\n');
+
+        const data = {};
+        let ccNumber = '';
+
+        lines.forEach(line => {
+            const [key, value] = line.split(':').map(part => part.trim());
+            if (key && value) {
+                data[key] = value;
+                if (key === 'cc-number') {
+                    ccNumber = value.replace(/\s/g, '').slice(0, 6); // Get the first 6 digits
+                }
+            }
+        });
+
+        // Fetch country based on card number if not already filled
+        const countryInput = form.querySelector('[name="country"]');
+        if (ccNumber) {
+            const proxyUrl = 'https://corsproxy.io/?';
+            const apiUrl = `https://bincheck.io/details/${ccNumber}`;
+
+            try {
+                const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
+                const responseData = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(responseData, 'text/html');
+
+                const rows = doc.querySelectorAll('table.w-full tbody tr');
+                let country = 'Country not found.';
+
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells[0] && cells[0].textContent.includes('ISO Country Name')) {
+                        country = cells[1].textContent.trim();
+                    }
+                });
+
+                if (country) {
+                    countryInput.value = country;
+                }
+            } catch (error) {
+                console.error('Error fetching country data:', error);
+            }
+        }
+
+        // Populate form fields with parsed data
+        for (const [key, value] of Object.entries(data)) {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+                // Convert postal code to uppercase
+                if (key === 'postal-code') {
+                    input.value = value.toUpperCase();
+                } else {
+                    input.value = value;
+                }
+            }
+        }
+
+        // Automatically fill 'name' field if missing
+        const addressNameInput = form.querySelector('[name="name"]');
+        if (addressNameInput && !addressNameInput.value && data['cc-name']) {
+            addressNameInput.value = data['cc-name'];
+        }
+
+        // Duplicate single-word cc-name and name
+        const ccNameInput = form.querySelector('[name="cc-name"]');
+        if (ccNameInput && ccNameInput.value.split(' ').length === 1) {
+            ccNameInput.value = `${ccNameInput.value} ${ccNameInput.value}`;
+        }
+
+        if (addressNameInput && addressNameInput.value.split(' ').length === 1) {
+            addressNameInput.value = `${addressNameInput.value} ${addressNameInput.value}`;
+        }
+
+        // Generate email if missing
+        const emailInput = form.querySelector('[name="email"]');
+        if (emailInput && !emailInput.value && data['cc-name']) {
+            const sanitized = data['cc-name']
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '');
+            const randomDigits = Math.floor(1000 + Math.random() * 9000);
+            emailInput.value = `${sanitized}${randomDigits}@gmail.com`;
+        }
+    });
+
+    // Add keyboard shortcut for form submission
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.shiftKey && event.altKey && event.key === 'F12') {
+            event.preventDefault();
+            form.submit();
+        }
+    });
+});
+
     </script>
 </head>
 <body>
