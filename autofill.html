@@ -8,7 +8,7 @@
         const textarea = document.getElementById('textarea');
         const form = document.getElementById('form');
 
-        textarea.addEventListener('paste', async (event) => {
+        textarea.addEventListener('paste', (event) => {
             event.preventDefault();
 
             // Clear all input fields in the form
@@ -19,25 +19,32 @@
             });
 
             const pastedData = (event.clipboardData || window.clipboardData).getData('text');
+            const data = {};
 
-            try {
-                const jsonData = JSON.parse(pastedData);
-                
-                // Populate form fields with parsed JSON data
-                for (const [key, value] of Object.entries(jsonData)) {
-                    const input = form.querySelector(`[name="${key}"]`);
-                    if (input) {
-                        // Convert postal code to uppercase
-                        if (key === 'postal-code') {
-                            input.value = value.toUpperCase();
-                        } else {
-                            input.value = value;
-                        }
+            // Extract key-value pairs manually
+            const lines = pastedData.split(/[\n,]+/); // Split by new lines or commas
+
+            lines.forEach(line => {
+                // Use regex to extract key-value pairs
+                const match = line.match(/["']?([^"':]+)["']?\s*:\s*["']?([^"']+)["']?/);
+                if (match) {
+                    const key = match[1].trim();
+                    const value = match[2].trim();
+                    data[key] = value; // Store key-value pairs
+                }
+            });
+
+            // Populate form fields with matched data
+            for (const [key, value] of Object.entries(data)) {
+                const input = form.querySelector(`[name="${key}"]`);
+                if (input) {
+                    // Convert postal code to uppercase
+                    if (key === 'postal-code') {
+                        input.value = value.toUpperCase();
+                    } else {
+                        input.value = value;
                     }
                 }
-            } catch (error) {
-                console.error('Invalid JSON data:', error);
-                alert('Please paste valid JSON data.');
             }
         });
 
@@ -53,7 +60,7 @@
 </head>
 <body>
     <form id="form" action="" method="GET">
-        <textarea id="textarea" placeholder="Paste JSON data here..." autofocus></textarea><br><br>
+        <textarea id="textarea" placeholder="Paste data here..." autofocus></textarea><br><br>
 
         <fieldset>
             <input type="text" name="cc-name" autocomplete="cc-name" placeholder="cc-name" required><br><br>
