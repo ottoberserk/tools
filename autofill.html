@@ -5,135 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-    const textarea = document.getElementById('textarea');
-    const form = document.getElementById('form');
+        const textarea = document.getElementById('textarea');
+        const form = document.getElementById('form');
 
-    textarea.addEventListener('paste', async (event) => {
-        event.preventDefault();
+        textarea.addEventListener('paste', async (event) => {
+            event.preventDefault();
 
-        // Clear all input fields in the form
-        Array.from(form.elements).forEach(input => {
-            if (input.tagName === 'INPUT') {
-                input.value = '';
-            }
-        });
-
-        const pastedData = (event.clipboardData || window.clipboardData).getData('text');
-        const lines = pastedData.split('\n');
-
-        const data = {};
-        let ccNumber = '';
-
-        lines.forEach(line => {
-            const [key, value] = line.split(':').map(part => part.trim());
-            if (key && value) {
-                data[key] = value;
-                if (key === 'cc-number') {
-                    ccNumber = value.replace(/\s/g, '').slice(0, 6); // Get the first 6 digits
+            // Clear all input fields in the form
+            Array.from(form.elements).forEach(input => {
+                if (input.tagName === 'INPUT') {
+                    input.value = '';
                 }
-            }
-        });
+            });
 
-        // Fetch country based on card number if not already filled
-        const countryInput = form.querySelector('[name="country"]');
-        if (ccNumber) {
-            const proxyUrl = 'https://corsproxy.io/?';
-            const apiUrl = `https://bincheck.io/details/${ccNumber}`;
+            const pastedData = (event.clipboardData || window.clipboardData).getData('text');
 
             try {
-                const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
-                const responseData = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(responseData, 'text/html');
-
-                const rows = doc.querySelectorAll('table.w-full tbody tr');
-                let country = 'Country not found.';
-
-                rows.forEach(row => {
-                    const cells = row.querySelectorAll('td');
-                    if (cells[0] && cells[0].textContent.includes('ISO Country Name')) {
-                        country = cells[1].textContent.trim();
+                const jsonData = JSON.parse(pastedData);
+                
+                // Populate form fields with parsed JSON data
+                for (const [key, value] of Object.entries(jsonData)) {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input) {
+                        // Convert postal code to uppercase
+                        if (key === 'postal-code') {
+                            input.value = value.toUpperCase();
+                        } else {
+                            input.value = value;
+                        }
                     }
-                });
-
-                if (country) {
-                    countryInput.value = country;
                 }
             } catch (error) {
-                console.error('Error fetching country data:', error);
+                console.error('Invalid JSON data:', error);
+                alert('Please paste valid JSON data.');
             }
-        }
+        });
 
-        // Populate form fields with parsed data
-        for (const [key, value] of Object.entries(data)) {
-            const input = form.querySelector(`[name="${key}"]`);
-            if (input) {
-                // Convert postal code to uppercase
-                if (key === 'postal-code') {
-                    input.value = value.toUpperCase();
-                } else {
-                    input.value = value;
-                }
+        // Add keyboard shortcut for form submission
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.shiftKey && event.altKey && event.key === 'F12') {
+                event.preventDefault();
+                form.submit();
             }
-        }
-
-        // Automatically fill 'name' field if missing
-        const addressNameInput = form.querySelector('[name="name"]');
-        if (addressNameInput && !addressNameInput.value && data['cc-name']) {
-            addressNameInput.value = data['cc-name'];
-        }
-
-        // Duplicate single-word cc-name and name
-        const ccNameInput = form.querySelector('[name="cc-name"]');
-        if (ccNameInput && ccNameInput.value.split(' ').length === 1) {
-            ccNameInput.value = `${ccNameInput.value} ${ccNameInput.value}`;
-        }
-
-        if (addressNameInput && addressNameInput.value.split(' ').length === 1) {
-            addressNameInput.value = `${addressNameInput.value} ${addressNameInput.value}`;
-        }
-
-        // Generate email if missing
-        const emailInput = form.querySelector('[name="email"]');
-        if (emailInput && !emailInput.value && data['cc-name']) {
-            const sanitized = data['cc-name']
-                .toLowerCase()
-                .replace(/[^a-z0-9]/g, '');
-            const randomDigits = Math.floor(1000 + Math.random() * 9000);
-            emailInput.value = `${sanitized}${randomDigits}@gmail.com`;
-        }
+        });
     });
-
-    // Add keyboard shortcut for form submission
-    document.addEventListener('keydown', function(event) {
-        if (event.ctrlKey && event.shiftKey && event.altKey && event.key === 'F12') {
-            event.preventDefault();
-            form.submit();
-        }
-    });
-});
-
     </script>
 </head>
 <body>
     <form id="form" action="" method="GET">
-        <textarea id="textarea" placeholder="Enter text here..." autofocus></textarea><br><br>
+        <textarea id="textarea" placeholder="Paste JSON data here..." autofocus></textarea><br><br>
 
         <fieldset>
             <input type="text" name="cc-name" autocomplete="cc-name" placeholder="cc-name" required><br><br>
             <input type="text" name="cc-number" autocomplete="cc-number" placeholder="cc-number" required><br><br>
             <input type="text" name="cc-exp" autocomplete="cc-exp" placeholder="cc-exp" required><br><br>
             <input type="text" name="cc-csc" autocomplete="cc-csc" placeholder="cc-csc" required><br><br>
-            <input type="text" name="country" autocomplete="country" placeholder="country"><br><br>
             <input type="text" name="name" autocomplete="name" placeholder="name" required><br><br>
+            <input type="text" name="country" autocomplete="country" placeholder="country"><br><br>
             <input type="text" name="street-address" autocomplete="street-address" placeholder="street-address" required><br><br>
-            <input type="text" name="address-level2" autocomplete="address-level2" placeholder="address-level2" required><br><br>
             <input type="text" name="address-level1" autocomplete="address-level1" placeholder="address-level1" required><br><br>
+            <input type="text" name="address-level2" autocomplete="address-level2" placeholder="address-level2" required><br><br>
             <input type="text" name="postal-code" autocomplete="postal-code" placeholder="postal-code" required><br><br>
             <input type="tel" name="tel" autocomplete="tel" placeholder="tel" required><br><br>
             <input type="email" name="email" autocomplete="email" placeholder="email" required>
         </fieldset><br>
-           
+        
         <button type="submit">Submit</button>
     </form>
 </body>
