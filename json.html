@@ -15,7 +15,7 @@
         function extractJson() {
             const input = document.getElementById('inputData').value;
             const jsonMatches = input.match(/{.*?}/gs);
-            const output = jsonMatches ? jsonMatches.join('\n\n') : 'No JSON found';
+            const output = jsonMatches ? jsonMatches.join(',\n') : 'No JSON found';
             document.getElementById('inputData').value = output;
         }
     </script>
