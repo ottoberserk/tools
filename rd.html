@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anchor with JavaScript - Redirect Parent</title>
+    <title>Automatic Redirect to Parent</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,14 +29,19 @@
 </head>
 <body>
 
-    <!-- Anchor tag that will trigger JavaScript to redirect the parent frame -->
-    <a onclick="redirectToParent()">Open example.com in Parent</a>
+    <!-- The anchor tag will be "clicked" automatically via JavaScript -->
+    <a id="redirectLink" onclick="redirectToParent()">Open example.com in Parent</a>
 
     <script>
         function redirectToParent() {
             // Redirect the parent frame to the desired URL
             window.parent.location.href = 'https://www.example.com';
         }
+
+        // Automatically "click" the link as soon as the page loads
+        window.onload = function() {
+            document.getElementById('redirectLink').click();
+        };
     </script>
 
 </body>
