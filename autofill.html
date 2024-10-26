@@ -7,6 +7,44 @@
     document.addEventListener('DOMContentLoaded', () => {
         const textarea = document.getElementById('textarea');
         const form = document.getElementById('form');
+        const ccNameInput = form.querySelector('[name="cc-name"]');
+        const nameInput = form.querySelector('[name="name"]');
+        const emailInput = form.querySelector('[name="email"]');
+
+        // Function to duplicate cc-name if it is a single word
+        function duplicateCCNameIfOneWord() {
+            const ccNameValue = ccNameInput.value.trim();
+            const words = ccNameValue.split(/\s+/); // Split by whitespace
+            if (words.length === 1 && ccNameValue.length > 0) {
+                ccNameInput.value = `${ccNameValue} ${ccNameValue}`; // Duplicate the word
+            }
+        }
+
+        // Function to generate a random 4-digit number (no repeated digits)
+        function generateRandom4Digits() {
+            let digits = new Set();
+            while (digits.size < 4) {
+                digits.add(Math.floor(Math.random() * 10)); // Random digit between 0 and 9
+            }
+            return Array.from(digits).join('');
+        }
+
+        // Function to remove all special characters from cc-name
+        function removeSpecialChars(text) {
+            return text.replace(/[^a-zA-Z0-9\s]/g, ''); // Remove all non-alphanumeric characters
+        }
+
+        // Function to synchronize the name input with cc-name
+        function syncNameWithCCName() {
+            nameInput.value = ccNameInput.value; // Copy cc-name value to name field
+        }
+
+        // Function to update email based on cc-name
+        function updateEmail() {
+            const sanitizedCCName = removeSpecialChars(ccNameInput.value).replace(/\s+/g, ''); // Remove spaces
+            const randomDigits = generateRandom4Digits();
+            emailInput.value = `${sanitizedCCName}${randomDigits}@gmail.com`.toLowerCase(); // Generate the email in lowercase
+        }
 
         textarea.addEventListener('paste', (event) => {
             event.preventDefault();
@@ -44,8 +82,20 @@
                     } else {
                         input.value = value;
                     }
+
+                    // Duplicate cc-name if it's a single word
+                    if (key === 'cc-name') {
+                        ccNameInput.value = value.trim(); // Set value for cc-name
+                        duplicateCCNameIfOneWord(); // Duplicate if necessary
+                    }
                 }
             }
+
+            // Ensure name input matches the cc-name after paste
+            syncNameWithCCName();
+
+            // Update email based on the final cc-name
+            updateEmail();
         });
 
         // Add keyboard shortcut for form submission
@@ -55,6 +105,9 @@
                 form.submit();
             }
         });
+
+        // Event listener to duplicate cc-name if it becomes a single word
+        ccNameInput.addEventListener('input', duplicateCCNameIfOneWord);
     });
     </script>
 </head>
