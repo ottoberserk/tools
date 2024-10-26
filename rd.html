@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirect to Parent</title>
+    <title>Anchor with JavaScript - Redirect Parent</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,6 +20,7 @@
             background-color: #4CAF50;
             color: white;
             border-radius: 5px;
+            cursor: pointer;
         }
         a:hover {
             background-color: #45a049;
@@ -28,7 +29,15 @@
 </head>
 <body>
 
-    <a href="https://www.example.com" target="_parent" rel="noopener noreferrer">Go to Parent (example.com)</a>
+    <!-- Anchor tag that will trigger JavaScript to redirect the parent frame -->
+    <a onclick="redirectToParent()">Open example.com in Parent</a>
+
+    <script>
+        function redirectToParent() {
+            // Redirect the parent frame to the desired URL
+            window.parent.location.href = 'https://www.example.com';
+        }
+    </script>
 
 </body>
 </html>
