@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Autofill Form</title>
+</head>
+<body>
+    <h2>Shipping Address Autofill</h2>
+    <form autocomplete="on">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" value="Ossama Mektane" autocomplete="name"><br><br>
+
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" name="address-line1" value="Hay Pam Bloc 1 Nr 24, tel: +212770849008" autocomplete="address-line1"><br><br>
+
+        <label for="postal-code">Postal Code:</label><br>
+        <input type="text" id="postal-code" name="postal-code" value="83200" autocomplete="postal-code"><br><br>
+
+        <label for="city">City:</label><br>
+        <input type="text" id="city" name="address-level2" value="Ait Iazza" autocomplete="address-level2"><br><br>
+
+        <label for="country">Country:</label><br>
+        <input type="text" id="country" name="country" value="Morocco" autocomplete="country"><br><br>
+
+        <input type="submit" value="Save Address">
+    </form>
+</body>
+</html>
