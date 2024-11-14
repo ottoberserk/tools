@@ -4,34 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tools Index</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    .tool-list {
-      list-style-type: none;
-      padding: 0;
-    }
-    .tool-list li {
-      margin: 10px 0;
-    }
-    .tool-list a {
-      text-decoration: none;
-      color: #007bff;
-      font-weight: bold;
-    }
-    .tool-list a:hover {
-      color: #0056b3;
-    }
-  </style>
 </head>
 <body>
   <h1>Tools Index</h1>
-  <ul class="tool-list" id="toolList"></ul>
+  <ul id="toolList"></ul>
 
   <script>
-    const repoOwner = 'danielericgold'; // Replace with your GitHub username
-    const repoName = 'tools';     // Replace with your repository name
+    // Dynamically detect the GitHub username and repository name
+    const [repoOwner, repoName] = window.location.hostname === 'localhost' 
+      ? ['yourusername', 'your-repo'] // Default for local testing
+      : window.location.pathname.split('/').filter(Boolean);
+      
     const baseURL = `https://${repoOwner}.github.io/${repoName}/`;
 
     async function fetchHTMLFiles() {
@@ -51,6 +34,7 @@
           const link = document.createElement('a');
           link.href = `${baseURL}${file.name}`;
           link.textContent = file.name.replace('.html', '').replace(/-/g, ' ');
+          link.target = "_blank"; // Open in new tab
           listItem.appendChild(link);
           toolList.appendChild(listItem);
         });
