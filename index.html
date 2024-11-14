@@ -10,11 +10,11 @@
   <ul id="toolList"></ul>
 
   <script>
-    // Dynamically detect the GitHub username and repository name
-    const [repoOwner, repoName] = window.location.hostname === 'localhost' 
-      ? ['yourusername', 'your-repo'] // Default for local testing
-      : window.location.pathname.split('/').filter(Boolean);
-      
+    // Dynamically detect the GitHub username and repository name from the URL
+    const urlParts = window.location.hostname.split('.');
+    const repoOwner = urlParts[0]; // Username from URL, e.g., 'danielericgold'
+    const repoName = window.location.pathname.split('/')[1]; // Repository name, e.g., 'tools'
+    
     const baseURL = `https://${repoOwner}.github.io/${repoName}/`;
 
     async function fetchHTMLFiles() {
