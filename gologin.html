@@ -18,8 +18,9 @@
             const ccName = (inputText.match(/"cc-name":\s*"([^"]+)"/) || [])[1] || '';
             const ccCsc = (inputText.match(/"cc-csc":\s*"([^"]+)"/) || [])[1] || '';
             const ccExp = (inputText.match(/"cc-exp":\s*"([^"]+)"/) || [])[1] || '';
+            const country = (inputText.match(/"country":\s*"([^"]+)"/) || [])[1] || '';
 
-            output.value = `${ccCsc} ${ccName} ${ccExp}`;
+            output.value = `${ccCsc} ${ccName} ${ccExp} ${country}`;
         });
     </script>
 
