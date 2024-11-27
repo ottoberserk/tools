@@ -9,7 +9,7 @@
         // Fetch product names from an external text file
         async function fetchProductNames() {
             try {
-                const response = await fetch('https://gist.githubusercontent.com/ottoberserk/e2f6822b1cdec7c15daaf92c6781ab20/raw/fff62ebf0ca2c14c691bf5357fa2a41779be557e/index.txt'); // Path to your text file
+                const response = await fetch('https://gist.githubusercontent.com/ottoberserk/e2f6822b1cdec7c15daaf92c6781ab20/raw/341a9edd76bbefb0fa305b53186cf3da4967f4d7/index.txt'); // Path to your text file
                 const text = await response.text();
                 productNames = text.split('\n').map(name => name.trim()).filter(name => name); // Split by lines, trim whitespace, and filter out empty lines
                 shuffle(productNames); // Shuffle the array after fetching
@@ -43,7 +43,7 @@
         }
 
         function generateRandomNumber() {
-            return Math.floor(1000000000 + Math.random() * 9000000000).toString();
+            return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
         }
 
         function setOrderAndItemNumbers() {
@@ -89,11 +89,20 @@
     <input type="text" id="itemName" name="item_name" required readonly><br><br>
 
     <label for="amount">Amount:</label><br>
-    <input type="number" id="amount" name="amount" step="0.01" value="4.5" required><br><br>
+    <input type="number" id="amount" name="amount" step="0.01" value="10.00" required><br><br>
 
     <label for="currency">Currency Code:</label><br>
-    <input type="text" id="currency" name="currency_code" value="USD" required readonly><br><br>
-
+<select id="currency" name="currency_code" required>
+  <option value="USD" selected>United States Dollar (USD)</option>
+  <option value="EUR">Euro (EUR)</option>
+  <option value="GBP">British Pound Sterling (GBP)</option>
+  <option value="JPY">Japanese Yen (JPY)</option>
+  <option value="CNY">Chinese Yuan Renminbi (CNY)</option>
+  <option value="CHF">Swiss Franc (CHF)</option>
+  <option value="CAD">Canadian Dollar (CAD)</option>
+  <option value="AUD">Australian Dollar (AUD)</option>
+  <option value="INR">Indian Rupee (INR)</option>
+</select><br><br>
     <button type="submit">Pay Now</button>
 
     <!-- Hidden Inputs -->
