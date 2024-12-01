@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-    <!-- Only the Cloudflare Turnstile Widget -->
+    <!-- Cloudflare Turnstile Widget -->
     <div class="cf-turnstile" 
          data-sitekey="0x4AAAAAAA1Plk8S_3ZwnsJx" 
          data-callback="onCaptchaCompleted"></div>
@@ -35,8 +35,13 @@
                     body: JSON.stringify({ turnstileResponse: token }),
                 });
 
-                const result = await response.json();
+                if (!response.ok) {
+                    console.error("Server responded with an error:", response.status, response.statusText);
+                    alert("Failed to validate CAPTCHA. Please try again.");
+                    return;
+                }
 
+                const result = await response.json();
                 console.log("Validation Response:", result); // Log server response
 
                 if (result.success) {
@@ -44,6 +49,7 @@
                     // Redirect to the success page
                     window.location.href = "https://example.com/success"; // Replace with your desired URL
                 } else {
+                    console.error("CAPTCHA validation failed:", result.message || "Unknown error");
                     alert("CAPTCHA validation failed. Please try again.");
                 }
             } catch (error) {
