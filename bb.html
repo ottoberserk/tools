@@ -31,7 +31,7 @@
             try {
                 const response = await fetch(validationUrl, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json" }, // Explicitly set Content-Type
                     body: JSON.stringify({ turnstileResponse: token }),
                 });
 
