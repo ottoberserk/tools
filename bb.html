@@ -22,28 +22,34 @@
 
     <script>
         // Callback function triggered when CAPTCHA is successfully completed
-        function onCaptchaCompleted(token) {
+        async function onCaptchaCompleted(token) {
+            console.log("Turnstile token received:", token); // Log the token for debugging
+
             // Replace with your serverless function URL
             const validationUrl = "https://white-band-13c9.soprannome-cloudflare.workers.dev/";
 
-            fetch(validationUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ turnstileResponse: token }),
-            })
-            .then((response) => response.json())
-            .then((result) => {
+            try {
+                const response = await fetch(validationUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ turnstileResponse: token }),
+                });
+
+                const result = await response.json();
+
+                console.log("Validation Response:", result); // Log server response
+
                 if (result.success) {
-                    // Redirect on successful CAPTCHA validation
-                    window.location.href = "https://example.com/success"; // Replace with your redirect URL
+                    console.log("CAPTCHA validated successfully. Redirecting...");
+                    // Redirect to the success page
+                    window.location.href = "https://example.com/success"; // Replace with your desired URL
                 } else {
                     alert("CAPTCHA validation failed. Please try again.");
                 }
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error("Error validating CAPTCHA:", error);
                 alert("An error occurred. Please try again.");
-            });
+            }
         }
     </script>
 </body>
