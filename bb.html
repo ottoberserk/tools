@@ -2,57 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cloudflare Turnstile Example</title>
+    <title>Cloudflare Turnstile Challenge</title>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Submit Form with Turnstile CAPTCHA</h1>
-    <form id="turnstileForm" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        <br><br>
-        <!-- Cloudflare Turnstile Widget -->
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAA1Plk8S_3ZwnsJx"></div>
-        <br>
-        <button type="submit">Submit</button>
-    </form>
+    <!-- Only the Cloudflare Turnstile Widget -->
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAAA1Plk8S_3ZwnsJx"></div>
 
     <script>
-        // Handle form submission
-        document.getElementById("turnstileForm").addEventListener("submit", async function (e) {
-            e.preventDefault(); // Prevent normal form submission
+        window.turnstileCallback = function(token) {
+            // Replace with your serverless function URL
+            const validationUrl = "https://white-band-13c9.soprannome-cloudflare.workers.dev/";
 
-            const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]').value;
-            const name = document.querySelector('[name="name"]').value;
-
-            if (!turnstileResponse) {
-                alert("Please complete the CAPTCHA.");
-                return;
-            }
-
-            try {
-                // Replace with your serverless function URL
-                const validationUrl = "https://white-band-13c9.soprannome-cloudflare.workers.dev/";
-
-                const response = await fetch(validationUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ turnstileResponse, name }),
-                });
-
-                const result = await response.json();
+            fetch(validationUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ turnstileResponse: token }),
+            })
+            .then((response) => response.json())
+            .then((result) => {
                 if (result.success) {
-                    alert("CAPTCHA validated successfully! Thank you, " + name);
+                    // Redirect on successful CAPTCHA validation
+                    window.location.href = "https://example.com/success"; // Replace with your redirect URL
                 } else {
                     alert("CAPTCHA validation failed. Please try again.");
                 }
-            } catch (error) {
+            })
+            .catch((error) => {
                 console.error("Error validating CAPTCHA:", error);
                 alert("An error occurred. Please try again.");
-            }
-        });
+            });
+        };
     </script>
 </body>
 </html>
