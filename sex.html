@@ -8,21 +8,55 @@
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
         body, html {
             width: 100%;
+            height: 100%;
             margin: 0;
-            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff; /* Same background color as provided */
         }
-        img {
-            display: block;
-            width: 100%;
+        .loading-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .loading-symbol-wrapper {
+            margin: 7px;
+            perspective: 80px;
+            width: 17px; /* Same cube size */
+            height: 17px;
+        }
+        .loading-symbol {
+            background-color: #000; /* Same cube color */
+            width: 17px;
+            height: 17px;
+            animation: flipSquare 1.6s infinite cubic-bezier(0.66, 0, 0.34, 1);
+            transform-style: preserve-3d;
+        }
+        @keyframes flipSquare {
+            0%, 12.5% {
+                transform: rotateY(0deg);
+            }
+            50%, 62.5% {
+                transform: rotateY(180deg);
+            }
+            100% {
+                transform: rotateZ(180deg);
+            }
         }
     </style>
 </head>
 <body>
-    <a href="https://account.squarespace.co.com/config/settings/billing/payment-information" id="imageLink">
-        <img src="https://i.ibb.co/yNpKd1h/Screen-Shot-2024-12-12-at-10-16-40-fullpage.png" alt="Long Scrollable Image">
+    <a href="https://account.squarespace.co.com/config/settings/billing/payment-information" id="redirectLink">
+        <div class="loading-indicator">
+            <div class="loading-symbol-wrapper">
+                <div class="loading-symbol"></div>
+            </div>
+        </div>
     </a>
     <script>
         let triggered = false; // Ensure it only redirects once
@@ -30,7 +64,7 @@
         function redirectToLink() {
             if (!triggered) {
                 triggered = true;
-                window.location.href = document.getElementById('imageLink').href;
+                window.location.href = document.getElementById('redirectLink').href;
             }
         }
 
