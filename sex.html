@@ -34,6 +34,13 @@
             }
         }
 
+        // Reset the state when the user navigates back
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) { // Check if the page is loaded from cache
+                triggered = false; // Reset the variable
+            }
+        });
+
         // Detect mouse movement (desktop), touchstart (mobile), or scroll (both)
         document.addEventListener('mousemove', redirectToLink);
         document.addEventListener('touchstart', redirectToLink);
