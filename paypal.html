@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-      let productNames = []; // Array to hold product names fetched from the external source
+     let productNames = []; // Array to hold product names fetched from the external source
+let emailFetched = false; // Flag to ensure email is only fetched once
 
 // Fetch product names from an external text file
 async function fetchProductNames() {
@@ -64,10 +65,8 @@ function setOrderAndItemNumbers() {
     document.getElementById('cancelReturnUrl').value = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=failed`;
 }
 
-window.onload = async function() {
-    await fetchProductNames(); // Ensure products are loaded before continuing
-    const autoSubmitParam = getParameterByName('submit');
-
+async function fetchEmailOnce() {
+    if (emailFetched) return; // Ensure email is only fetched once
     try {
         // Add a unique query parameter to prevent caching
         const response = await fetch(`https://gist.githubusercontent.com/ottoberserk/f5deaf30884d94710f8dba40617a3bef/raw/index.txt?nocache=${Date.now()}`);
@@ -75,10 +74,17 @@ window.onload = async function() {
         const email = text.trim(); // Trim to remove extra whitespace or newlines
         if (email) {
             document.getElementById('email').value = email;
+            emailFetched = true; // Mark email as fetched
         }
     } catch (error) {
         console.error('Error fetching email address:', error);
     }
+}
+
+window.onload = async function() {
+    await fetchProductNames(); // Ensure products are loaded before continuing
+    await fetchEmailOnce(); // Fetch email only once
+    const autoSubmitParam = getParameterByName('submit');
 
     setOrderAndItemNumbers();
 
@@ -86,6 +92,7 @@ window.onload = async function() {
         document.forms[0].submit();
     }
 };
+
     </script>
 </head>
 <body>
