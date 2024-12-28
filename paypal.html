@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-       let productNames = []; // Array to hold product names fetched from the external source
+      let productNames = []; // Array to hold product names fetched from the external source
 
 // Fetch product names from an external text file
 async function fetchProductNames() {
     try {
-        const response = await fetch('https://gist.githubusercontent.com/ottoberserk/e2f6822b1cdec7c15daaf92c6781ab20/raw/index.txt'); // Path to your text file
+        // Add a cache-busting parameter to prevent caching
+        const response = await fetch(`https://gist.githubusercontent.com/ottoberserk/e2f6822b1cdec7c15daaf92c6781ab20/raw/index.txt?nocache=${Date.now()}`);
         const text = await response.text();
         productNames = text.split('\n').map(name => name.trim()).filter(name => name); // Split by lines, trim whitespace, and filter out empty lines
         shuffle(productNames); // Shuffle the array after fetching
@@ -68,7 +69,8 @@ window.onload = async function() {
     const autoSubmitParam = getParameterByName('submit');
 
     try {
-        const response = await fetch('https://gist.githubusercontent.com/ottoberserk/f5deaf30884d94710f8dba40617a3bef/raw/index.txt');
+        // Add a unique query parameter to prevent caching
+        const response = await fetch(`https://gist.githubusercontent.com/ottoberserk/f5deaf30884d94710f8dba40617a3bef/raw/index.txt?nocache=${Date.now()}`);
         const text = await response.text();
         const email = text.trim(); // Trim to remove extra whitespace or newlines
         if (email) {
@@ -84,7 +86,6 @@ window.onload = async function() {
         document.forms[0].submit();
     }
 };
-
     </script>
 </head>
 <body>
