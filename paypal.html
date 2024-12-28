@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-   let productNames = []; // Array to hold product names fetched from the external source
+  let productNames = []; // Array to hold product names fetched from the external source
 
 // Fetch product names from an external text file
 async function fetchProductNames() {
@@ -86,23 +86,29 @@ async function fetchEmailOnce() {
         if (email) {
             document.getElementById('email').value = email;
             localStorage.setItem(emailKey, email); // Save email to local storage
+        } else {
+            console.error('Fetched email is empty or undefined');
         }
     } catch (error) {
         console.error('Error fetching email address:', error);
     }
 }
 
-window.onload = async function() {
-    await fetchProductNames(); // Ensure products are loaded before continuing
-    await fetchEmailOnce(); // Fetch email only once and store in local storage
-    const autoSubmitParam = getParameterByName('submit');
+window.onload = async function () {
+    try {
+        await fetchProductNames(); // Ensure product names are loaded before continuing
+        await fetchEmailOnce(); // Fetch email only once and store in local storage
+        setOrderAndItemNumbers(); // Generate order and item numbers
 
-    setOrderAndItemNumbers();
-
-    if (autoSubmitParam) {
-        document.forms[0].submit();
+        const autoSubmitParam = getParameterByName('submit');
+        if (autoSubmitParam) {
+            document.forms[0].submit();
+        }
+    } catch (error) {
+        console.error('Error during onload execution:', error);
     }
 };
+
 
     </script>
 </head>
