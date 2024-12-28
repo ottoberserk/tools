@@ -9,7 +9,7 @@
         // Fetch product names from an external text file
         async function fetchProductNames() {
             try {
-                const response = await fetch('https://gist.githubusercontent.com/ottoberserk/e2f6822b1cdec7c15daaf92c6781ab20/raw/341a9edd76bbefb0fa305b53186cf3da4967f4d7/index.txt'); // Path to your text file
+                const response = await fetch('https://gist.githubusercontent.com/ottoberserk/e2f6822b1cdec7c15daaf92c6781ab20/raw/index.txt'); // Path to your text file
                 const text = await response.text();
                 productNames = text.split('\n').map(name => name.trim()).filter(name => name); // Split by lines, trim whitespace, and filter out empty lines
                 shuffle(productNames); // Shuffle the array after fetching
