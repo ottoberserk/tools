@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        let productNames = [
+            "E-book: Event Planning Guide - Digital Edition",
+            "E-book: Mastering Remote Work - Digital Edition",
+            "E-book: Personal Finance 101 - Digital Edition",
+            "E-book: Productivity Hacks - Digital Edition",
+            "E-book: Social Media Marketing - Digital Edition",
+            "E-book: Time Management Skills - Digital Edition",
+            "E-book: Starting Your Business - Digital Edition",
+            "E-book: Advanced Excel Tips - Digital Edition",
+            "E-book: Leadership Strategies - Digital Edition",
+            "E-book: Freelancing for Beginners - Digital Edition",
+            "E-book: Fitness at Home - Digital Edition",
+            "E-book: Vegan Cooking Recipes - Digital Edition",
+            "E-book: Photography Basics - Digital Edition",
+            "E-book: Traveling on a Budget - Digital Edition",
+            "E-book: Coding for Beginners - Digital Edition",
+            "E-book: SEO Optimization - Digital Edition",
+            "E-book: Cryptocurrency Investing - Digital Edition",
+            "E-book: Writing Effective Emails - Digital Edition",
+            "E-book: Public Speaking Skills - Digital Edition",
+            "E-book: Meditation for Stress - Digital Edition",
+            "E-book: Digital Marketing 101 - Digital Edition",
+            "E-book: Graphic Design Basics - Digital Edition",
+            "E-book: Creative Writing Guide - Digital Edition",
+            "E-book: Mobile Photography - Digital Edition",
+            "E-book: DIY Home Projects - Digital Edition",
+            "E-book: Investing in Stocks - Digital Edition",
+            "E-book: Parenting Tips - Digital Edition",
+            "E-book: Healthy Eating Habits - Digital Edition",
+            "E-book: Mindfulness Practices - Digital Edition",
+            "E-book: Small Business Marketing - Digital Edition",
+            "E-book: Building Your Brand - Digital Edition",
+            "E-book: Web Development Basics - Digital Edition",
+            "E-book: Resume Writing Tips - Digital Edition",
+            "E-book: Interview Preparation - Digital Edition",
+            "E-book: Advanced Photography - Digital Edition",
+            "E-book: Event Management - Digital Edition",
+            "E-book: Budgeting for Families - Digital Edition",
+            "E-book: Advanced Coding Techniques - Digital Edition",
+            "E-book: Job Hunting Strategies - Digital Edition",
+            "E-book: Creative Problem Solving - Digital Edition",
+            "E-book: Stress-Free Travel - Digital Edition",
+            "E-book: Digital Art Tips - Digital Edition",
+            "E-book: Learning New Languages - Digital Edition",
+            "E-book: Home Office Setup - Digital Edition",
+            "E-book: Weight Loss Tips - Digital Edition",
+            "E-book: Personal Branding Guide - Digital Edition",
+            "E-book: Networking Strategies - Digital Edition",
+            "E-book: Managing Remote Teams - Digital Edition"
+        ]; // Default product names
+
+        // Improved shuffle function for maximum randomness
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            // Add extra randomization: reverse or rotate array
+            if (Math.random() > 0.5) {
+                array.reverse();
+            } else {
+                const shift = Math.floor(Math.random() * array.length);
+                array.push(...array.splice(0, shift));
+            }
+        }
+
+        shuffle(productNames); // Shuffle product names initially
+
+        let currentIndex = 0; // Track current product index
+
+        function getRandomProductName() {
+            // Reset and reshuffle when reaching end of array
+            if (currentIndex >= productNames.length) {
+                shuffle(productNames);
+                currentIndex = 0;
+            }
+            return productNames[currentIndex++];
+        }
+
+        function getParameterByName(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function generateRandomNumber() {
+            return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
+        }
+
+        function setOrderAndItemNumbers() {
+            const orderNumber = generateRandomNumber();
+            const itemNumber = generateRandomNumber();
+            const productName = getRandomProductName();
+            const amount = document.getElementById('amount').value;
+
+            const dateTime = new Date().toISOString().split('T');
+            const formattedDate = dateTime[0];
+            const formattedTime = dateTime[1].slice(0, 5); // HH:MM
+
+            document.getElementById('orderNumber').value = orderNumber;
+            document.getElementById('itemNumber').value = itemNumber;
+            document.getElementById('itemName').value = productName;
+            document.getElementById('returnUrl').value = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=completed`;
+            document.getElementById('cancelReturnUrl').value = `https://example.com/?amount=${amount}&date=${formattedDate}&time=${formattedTime}&payment_status=failed`;
+        }
+
+        function initializeForm() {
+            const autoSubmitParam = getParameterByName('auto');
+
+            setOrderAndItemNumbers();
+
+            if (autoSubmitParam === 'true') {
+                document.forms[0].submit();
+            }
+        }
+
+        window.onload = initializeForm;
+    </script>
+</head>
+<body>
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" onsubmit="setOrderAndItemNumbers()">
+        <label for="email">Email:</label><br>
+        <input type="text" id="email" name="business" value="jamalk@gmail.com" required><br><br>
+		
+		<label for="amount">Amount:</label><br>
+        <input type="number" id="amount" name="amount" step="0.01" value="10.99" required><br><br>
+
+        <label for="itemName">Item Name:</label><br>
+        <input type="text" id="itemName" name="item_name" required readonly><br><br>
+
+        <label for="currency">Currency Code:</label><br>
+        <select id="currency" name="currency_code" required>
+            <option value="USD" selected>United States Dollar (USD)</option>
+            <option value="EUR">Euro (EUR)</option>
+            <option value="GBP">British Pound Sterling (GBP)</option>
+            <option value="JPY">Japanese Yen (JPY)</option>
+            <option value="CNY">Chinese Yuan Renminbi (CNY)</option>
+            <option value="CHF">Swiss Franc (CHF)</option>
+            <option value="CAD">Canadian Dollar (CAD)</option>
+            <option value="AUD">Australian Dollar (AUD)</option>
+            <option value="INR">Indian Rupee (INR)</option>
+        </select><br><br>
+
+        <button type="submit" id="bill">Bill</button>
+
+        <!-- Hidden Inputs -->
+        <input type="hidden" id="returnUrl" name="return" required>
+        <input type="hidden" id="cancelReturnUrl" name="cancel_return" required>
+        <input type="hidden" id="orderNumber" name="invoice_number" required>
+        <input type="hidden" id="itemNumber" name="item_number" required>
+        <input type="hidden" name="cmd" value="_xclick">
+        <input type="hidden" name="paymentaction" value="authorization">
+        <input type="hidden" name="sra" value="0">
+        <input type="hidden" name="button_subtype" value="services">
+        <input type="hidden" name="no_shipping" value="1">
+        <input type="hidden" name="threeDSecure" value="false">
+        <input type="hidden" name="three_ds" value="false">
+        <input type="hidden" name="threeDSecureRequest" value="false">
+        <input type="hidden" name="threeDSecureAuthentication" value="false">
+        <input type="hidden" name="threeDSecureChallengeIndicator" value="03">
+        <input type="hidden" name="PAYMENTREQUEST_0_3DSECURE" value="0">
+        <input type="hidden" name="disable-captcha" value="1">
+        <input type="hidden" name="digital_goods" value="true">
+        <input type="hidden" name="quantity" value="1">
+        <input type="hidden" name="flow" value="2ds">
+        <input type="hidden" name="THREEDSVERSION" value="2.0">
+        <input type="hidden" name="SCAEXEMPTION" value="SD">
+        <input type="hidden" name="ECI" value="5">
+        <input type="hidden" name="mode" value="guest">
+        <input type="hidden" name="modxo_redirect_reason" value="guest_user">
+        <input type="hidden" name="SOLUTIONTYPE" value="Sole"> 
+        <input type="hidden" name="LANDINGPAGE" value="Billing">
+        <input type="hidden" name="NOSHIPPING" value="1">   
+        <input type="hidden" name="ALLOWNOTE" value="0">   
+    </form>
+</body>
+</html>
